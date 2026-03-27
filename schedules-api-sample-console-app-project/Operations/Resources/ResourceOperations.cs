@@ -45,5 +45,11 @@ namespace SchedulesApiSampleConsoleApp.Operations.Resources
             var post = new HttpPost($"schedules/{schedule}/resources/status-history", _client);
             return await post.Post(data);
         }
+
+        internal async Task<ResourceStatusItemGet?> FetchResourceStatusItemsAsync(string schedule)
+        {
+            var get = new HttpGet($"schedules/{schedule}/resource-status-items", _client);
+            return await get.GetJson<ResourceStatusItemGet>();
+        }
     }
 }

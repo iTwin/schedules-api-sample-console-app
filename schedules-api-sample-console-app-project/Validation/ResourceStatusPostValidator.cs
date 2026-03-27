@@ -8,11 +8,12 @@ namespace SchedulesApiSampleConsoleApp.Validation
 {
     public class ResourceStatusPostValidator
     {
-        private const string statusCategoryId = "2bf087ec-d6cf-4f63-b1a2-70da8d9d9364";
-        private const string statusItemId = "c8b6cb23-6e15-4d0f-8b85-93fac81ebdf8";
 
-        public ValidationResult Validate(ResourceStatusPostItem item)
+        public ValidationResult Validate(ResourceStatusPostItem item, string firstResourceId, string firstStatusitemId)
         {
+            var resourceId = firstResourceId;
+            var statusItemId = firstStatusitemId;
+
             if (item == null)
             {
                 return ValidationResult.Failure("ResourceStatusPostItem cannot be null.");
@@ -21,11 +22,6 @@ namespace SchedulesApiSampleConsoleApp.Validation
             if (string.IsNullOrWhiteSpace(item.ResourceId))
             {
                 return ValidationResult.Failure("ResourceId is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(item.StatusCategoryId))
-            {
-                return ValidationResult.Failure("StatusCategoryId is required.");
             }
 
             if (string.IsNullOrWhiteSpace(item.StatusItemId))
@@ -38,24 +34,18 @@ namespace SchedulesApiSampleConsoleApp.Validation
                 return ValidationResult.Failure("ResourceId should be a valid GUID.");
             }
 
-            if (!IsValidGuid(item.StatusCategoryId))
-            {
-                return ValidationResult.Failure("StatusCategoryId should be a valid GUID.");
-            }
-
             if (!IsValidGuid(item.StatusItemId))
             {
                 return ValidationResult.Failure("StatusItemId should be a valid GUID.");
             }
 
-            if (!string.Equals(item.StatusCategoryId, statusCategoryId, StringComparison.OrdinalIgnoreCase))
-            {
-                return ValidationResult.Failure($"StatusCategoryId should be '{statusCategoryId}'.");
-            }
-
             if (!string.Equals(item.StatusItemId, statusItemId, StringComparison.OrdinalIgnoreCase))
             {
                 return ValidationResult.Failure($"StatusItemId should be '{statusItemId}'.");
+            }
+            if (!string.Equals(item.ResourceId, resourceId, StringComparison.OrdinalIgnoreCase))
+            {
+                return ValidationResult.Failure($"ResourceId should be '{resourceId}'.");
             }
 
             return ValidationResult.Success();
