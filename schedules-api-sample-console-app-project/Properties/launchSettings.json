@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SchedulesApiSampleConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--schedule \"{Enter Schedule Id Here}\" --pagination"
+    }
+  }
+}
