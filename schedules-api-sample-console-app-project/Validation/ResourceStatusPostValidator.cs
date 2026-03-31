@@ -10,7 +10,7 @@ namespace SchedulesApiSampleConsoleApp.Validation
     {
 
         public ValidationResult Validate(ResourceStatusPostItem item)
-        {;
+        {
 
             if (item == null)
             {

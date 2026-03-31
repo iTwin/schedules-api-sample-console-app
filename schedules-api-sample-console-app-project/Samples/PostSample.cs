@@ -54,35 +54,36 @@ namespace SchedulesApiSampleConsoleApp.Samples
 			await _resourceOperations.FetchSingleResourceItemAsync(scheduleId, firstResourceId);
 			Console.WriteLine();
 
-			Console.WriteLine("[ Optional: Checking current Resource Status Histories ]");
-			Console.WriteLine("Now that the Resource ID has been chosen, the ResourceStatusHistory endpoint can be queried to check all Status Histories matching that ID.");
-			Console.WriteLine("This shows that the Resource Status History that is to be created does not exist yet.");
-			Console.WriteLine($"Sending GET request to {_requestUri}schedules/{scheduleId}/resources/{firstResourceId}/status-history\n");
-			await _resourceOperations.FetchResourceStatusHistoryAsync(scheduleId, firstResourceId);
-			Console.WriteLine();
-
-			var allStatusItems = await _resourceOperations.FetchResourceStatusItemsAsync(scheduleId);
+            Console.WriteLine("[ STEP 2: Ensure all required values have data ]");
+            Console.WriteLine("Now that the Resource ID has been chosen, A StatusItemId can be found similar to 'Step 1' to be used in the POST.");
+            Console.WriteLine($"Sending GET request to {_requestUri}schedules/{scheduleId}/resource-status-items\n");
+            var allStatusItems = await _resourceOperations.FetchResourceStatusItemsAsync(scheduleId);
 			if (allStatusItems?.ResourceStatusItems?.Count <= 0)
 			{
 				Console.WriteLine("There were no items found for the Resource Status GET request.\n");
 				Console.WriteLine("A resource status is required for the ResourceStatusHistory endpoint.\n");
 				return;
 			}
+            var firstStatusItemId = allStatusItems.ResourceStatusItems[0].Id;
+            var postResourceStatusItemData = new ResourceStatusPostItem
+            {
+                ResourceId = firstResourceId,
+                Date = DateTime.Now,
+                StatusItemId = firstStatusItemId,
+            };
 
-			var firstStatusItemId = allStatusItems.ResourceStatusItems[0].Id;
-			var postResourceStatusItemData = new ResourceStatusPostItem
-			{
-				ResourceId = firstResourceId,
-				Date = DateTime.Now,
-				StatusItemId = firstStatusItemId,
-			};
+            Console.WriteLine("The folowing IDs have been chosen to use in the POST request:");
+            Console.WriteLine($"ResourceId: '{firstResourceId}'");
+            Console.WriteLine($"StatusItemId: '{firstStatusItemId}'\n");
 
-			Console.WriteLine("[ STEP 2: Ensure all required values have data ]");
-			Console.WriteLine("Now that the Resource ID has been chosen, A StatusItemId can be found similar to 'Step 1' to be used in the POST.");
-			Console.WriteLine("For this example the status item used will be:");
-			Console.WriteLine($"StatusItemId: '{firstStatusItemId}'\n");
+            Console.WriteLine("[ Optional: Checking current Resource Status Histories ]");
+            Console.WriteLine("Now that the Resource ID has been chosen, the ResourceStatusHistory endpoint can be queried to check all Status Histories matching that ID.");
+            Console.WriteLine("This shows that the Resource Status History that is to be created does not exist yet.");
+            Console.WriteLine($"Sending GET request to {_requestUri}schedules/{scheduleId}/resources/{firstResourceId}/status-history\n");
+            await _resourceOperations.FetchResourceStatusHistoryAsync(scheduleId, firstResourceId);
+            Console.WriteLine();
 
-			var validationResult = _validator.Validate(postResourceStatusItemData);
+            var validationResult = _validator.Validate(postResourceStatusItemData);
 
 			if (!validationResult.IsValid)
 			{
