@@ -11,7 +11,6 @@ namespace SchedulesApiSampleConsoleApp.Validation
 
         public ValidationResult Validate(ResourceStatusPostItem item)
         {
-
             if (item == null)
             {
                 return ValidationResult.Failure("ResourceStatusPostItem cannot be null.");
